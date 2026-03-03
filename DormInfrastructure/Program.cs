@@ -1,7 +1,14 @@
+using DormInfrastructure;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<Do2Context>(option => option.UseSqlServer(
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+
 
 var app = builder.Build();
 
@@ -22,7 +29,10 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    // pattern: "{controller=Tariffs}/{action=Index}/{id?}")
+    pattern: "{controller=Faculties}/{action=Index}/{id?}")
+  //pattern: "{controller=Degrees}/{action=Index}/{id?}")
+
     .WithStaticAssets();
 
 

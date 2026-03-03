@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using DormDomain.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace DormDomain.Model;
+namespace DormInfrastructure;
 
 public partial class Do2Context : DbContext
 {

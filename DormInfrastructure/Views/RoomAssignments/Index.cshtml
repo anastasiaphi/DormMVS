@@ -1,0 +1,49 @@
+﻿@model IEnumerable<DormDomain.Model.RoomAssignment>
+
+@{
+    ViewData["Title"] = "Історія проживання ";
+}
+
+<h1>Історія проживання @ViewBag.StudentFullName</h1>
+
+<p>
+    @Html.ActionLink("Додати новий запис", "Create", new { studentId = ViewBag.StudentId })
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckInDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckOutDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Room.RoomNum)
+            </th>
+           
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckInDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckOutDate)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Room.RoomNum)
+            </td>
+           
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
