@@ -1,4 +1,6 @@
+using DormDomain.Model;
 using DormInfrastructure;
+using DormInfrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +11,7 @@ builder.Services.AddDbContext<Do2Context>(option => option.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
-
+builder.Services.AddScoped<IDataPortServiceFactory<Faculty>, FacultyServiceFactory>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

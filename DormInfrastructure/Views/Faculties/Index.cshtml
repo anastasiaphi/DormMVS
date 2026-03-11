@@ -8,6 +8,8 @@
 
 <p>
     <a asp-action="Create">Додати новий факультет</a>
+    <a class="btn btn-primary mb-3" type="=submit" asp-area="" asp-controller="Faculties" asp-action="Import">Завантажити з файлу</a>
+
 </p>
 <table class="table">
     <thead>
@@ -45,3 +47,42 @@
 }
     </tbody>
 </table>
+<div class="row">
+    <div class="col-12">
+        <div id="countByFacultyChart"></div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            fetch('/api/charts/countByFaculty')
+                .then(response => response.json())
+                .then(data => {
+                    const dataTable = new google.visualization.DataTable();
+                    dataTable.addColumn('string', 'Факультет');
+                    dataTable.addColumn('number', 'Кількість студентів');
+
+                    data.forEach(item => {
+                        dataTable.addRow([item.faculty, item.count]);
+                 });
+
+                    const options = {
+                        title: 'Кількість студентів на факультетах',
+                        width: 600,
+                        height: 400,
+                        legend: { position: 'none' },
+                    };
+
+                    const chart = new google.visualization.ColumnChart(document.getElementById('countByFacultyChart'));
+
+                    chart.draw(dataTable, options);
+                });
+        }
+    </script>
+}

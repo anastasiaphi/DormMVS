@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DormDomain.Model;
 using DormInfrastructure;
+using DormInfrastructure.Services;
 
 namespace DormInfrastructure.Controllers
 {
@@ -14,10 +15,15 @@ namespace DormInfrastructure.Controllers
     {
         private readonly Do2Context _context;
 
-        public FacultiesController(Do2Context context)
+        private readonly IDataPortServiceFactory<Faculty> _facultyServiceFactory;
+
+        // ОНОВЛЕНО: додаємо фабрику в параметри конструктора
+        public FacultiesController(Do2Context context, IDataPortServiceFactory<Faculty> facultyServiceFactory)
         {
             _context = context;
+            _facultyServiceFactory = facultyServiceFactory; // ДОДАНО
         }
+        
 
         // GET: Faculties
         public async Task<IActionResult> Index()
@@ -155,6 +161,24 @@ namespace DormInfrastructure.Controllers
         private bool FacultyExists(int id)
         {
             return _context.Faculties.Any(e => e.Id == id);
+        }
+        [HttpGet]
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(IFormFile fileExcel, CancellationToken cancellationToken = default)
+        {
+            var importService = _facultyServiceFactory.GetImportService(fileExcel.ContentType);
+
+            using var stream = fileExcel.OpenReadStream();
+
+            await importService.ImportFromStreamAsync(stream, cancellationToken);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
