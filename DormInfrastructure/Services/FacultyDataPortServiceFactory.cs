@@ -1,12 +1,13 @@
-﻿using DormDomain.Model;
+﻿
 
+using DormDomain.Model;
 namespace DormInfrastructure.Services
 {
-    public class FacultyServiceFactory
+    public class FacultyDataPortServiceFactory
         : IDataPortServiceFactory<Faculty>
     {
         private readonly Do2Context _context;
-        public FacultyServiceFactory(Do2Context context)
+        public FacultyDataPortServiceFactory(Do2Context context)
         {
             _context = context;
         }
@@ -22,10 +23,9 @@ namespace DormInfrastructure.Services
         {
             if (contentType is "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-              //  return new FacultyExportService(_context);
+                return new FacultyExportService(_context);
             }
             throw new NotImplementedException($"No export service implemented for movies with content type {contentType}");
         }
     }
-
 }

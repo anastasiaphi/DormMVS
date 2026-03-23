@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DormDomain.Model;
 using DormInfrastructure;
 using DormInfrastructure.Services;
+using System.IO;
 
 namespace DormInfrastructure.Controllers
 {
@@ -15,13 +16,13 @@ namespace DormInfrastructure.Controllers
     {
         private readonly Do2Context _context;
 
-        private readonly IDataPortServiceFactory<Faculty> _facultyServiceFactory;
+        private readonly IDataPortServiceFactory<Faculty> _facultyDataPortServiceFactory;
 
         // ОНОВЛЕНО: додаємо фабрику в параметри конструктора
         public FacultiesController(Do2Context context, IDataPortServiceFactory<Faculty> facultyServiceFactory)
         {
             _context = context;
-            _facultyServiceFactory = facultyServiceFactory; // ДОДАНО
+            _facultyDataPortServiceFactory = facultyServiceFactory; // ДОДАНО
         }
         
 
@@ -172,7 +173,7 @@ namespace DormInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Import(IFormFile fileExcel, CancellationToken cancellationToken = default)
         {
-            var importService = _facultyServiceFactory.GetImportService(fileExcel.ContentType);
+            var importService = _facultyDataPortServiceFactory.GetImportService(fileExcel.ContentType);
 
             using var stream = fileExcel.OpenReadStream();
 
@@ -180,5 +181,28 @@ namespace DormInfrastructure.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Export([FromQuery] string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+     CancellationToken cancellationToken = default)
+        {
+            var exportService = _facultyDataPortServiceFactory.GetExportService(contentType);
+
+            var memoryStream = new MemoryStream();
+
+            await exportService.WriteToAsync(memoryStream, cancellationToken);
+
+            await memoryStream.FlushAsync(cancellationToken);
+            memoryStream.Position = 0;
+
+
+            return new FileStreamResult(memoryStream, contentType)
+            {
+                FileDownloadName = $"faculties_{DateTime.UtcNow.ToShortDateString()}.xlsx"
+            };
+        }
+     
+
+
     }
 }
