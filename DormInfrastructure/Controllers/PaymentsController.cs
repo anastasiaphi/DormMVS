@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DormDomain.Model;
+using DormInfrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DormDomain.Model;
-using DormInfrastructure;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DormInfrastructure.Controllers
 {
+    [Authorize(Roles = "admin, user")]
     public class PaymentsController : Controller
     {
         private readonly Do2Context _context;
@@ -53,7 +55,7 @@ namespace DormInfrastructure.Controllers
 
             return View(payment);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Payments/Create
         public IActionResult Create(int roomAssignmentId)
         {
@@ -91,7 +93,7 @@ namespace DormInfrastructure.Controllers
               ViewData["PaymentsStatusId"] = new SelectList(_context.PaymentsStatuses, "Id", "StatusName", payment.PaymentsStatusId);
             return View(payment);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Payments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -150,7 +152,7 @@ namespace DormInfrastructure.Controllers
         
             return View(payment);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Payments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

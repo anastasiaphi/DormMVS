@@ -21,12 +21,35 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Faculties" asp-action="Index">Факультети</a>
+                            <a class="nav-link" asp-controller="Faculties" asp-action="Index">Факультети</a>
                         </li>
-                        
                         <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Tariffs" asp-action="Index">Тарифи</a>
+                            <a class="nav-link" asp-controller="Tariffs" asp-action="Index">Тарифи</a>
                         </li>
+                    </ul>
+
+                    @* Мінімум коду для акаунта справа *@
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item"><span class="nav-link">@User.Identity.Name</span></li>
+                            <li class="nav-item">
+                                <form method="post" asp-controller="Account" asp-action="Logout" class="d-inline">
+                                    <button type="submit" class="btn nav-link">Вихід</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Увійти</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Реєстрація</a></li>
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-warning" asp-controller="Roles" asp-action="Index">Ролі</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 ﻿using DormDomain.Model;
 using DormInfrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace DormInfrastructure.Controllers
 {
+    [Authorize(Roles = "admin, user")]
     public class DepartmentsController : Controller
     {
         private readonly Do2Context _context;
@@ -51,8 +53,8 @@ namespace DormInfrastructure.Controllers
 
             return RedirectToAction("Index", "Students", new { id = department.Id, name = department.Name });
         }
-        
 
+        [Authorize(Roles = "admin")]
         // GET: Departments/Create
         public IActionResult Create(int facultyId)
         {
@@ -86,7 +88,7 @@ namespace DormInfrastructure.Controllers
             ViewData["FacultyId"] = new SelectList(_context.Faculties, "Id", "Name", department.FacultyId);
             return View(department);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Departments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -144,7 +146,7 @@ namespace DormInfrastructure.Controllers
             ViewData["FacultyId"] = new SelectList(_context.Faculties, "Id", "Address", department.FacultyId);
             return View(department);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Departments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

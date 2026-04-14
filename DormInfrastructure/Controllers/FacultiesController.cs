@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DormDomain.Model;
+using DormInfrastructure;
+using DormInfrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DormDomain.Model;
-using DormInfrastructure;
-using DormInfrastructure.Services;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DormInfrastructure.Controllers
 {
+    [Authorize(Roles = "admin, user")]
     public class FacultiesController : Controller
     {
         private readonly Do2Context _context;
@@ -49,9 +51,10 @@ namespace DormInfrastructure.Controllers
 
             return RedirectToAction("Index", "Departments", new { id = faculty.Id, name = faculty.Name });
         }
-        
+
 
         // GET: Faculties/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             return View();
@@ -72,7 +75,7 @@ namespace DormInfrastructure.Controllers
             }
             return View(faculty);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Faculties/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -124,7 +127,7 @@ namespace DormInfrastructure.Controllers
             }
             return View(faculty);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Faculties/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

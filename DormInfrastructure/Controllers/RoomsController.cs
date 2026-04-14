@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DormDomain.Model;
+using DormInfrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DormDomain.Model;
-using DormInfrastructure;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DormInfrastructure.Controllers
 {
+    [Authorize(Roles = "admin, user")]
     public class RoomsController : Controller
     {
         private readonly Do2Context _context;
@@ -49,7 +51,7 @@ namespace DormInfrastructure.Controllers
 
             return RedirectToAction("Index", "Students", new { id = room.Id, name = room.RoomNum });
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Rooms/Create
         public IActionResult Create(int tariffId)
         {
@@ -84,7 +86,7 @@ namespace DormInfrastructure.Controllers
             ViewData["TariffsId"] = new SelectList(_context.Tariffs, "Id", "TariffsName", room.TariffsId);
             return View(room);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Rooms/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -141,7 +143,7 @@ namespace DormInfrastructure.Controllers
             ViewData["TariffsId"] = new SelectList(_context.Tariffs, "Id", "TariffsName", room.TariffsId);
             return View(room);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Rooms/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

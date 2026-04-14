@@ -5,11 +5,13 @@
 }
 
 <h1>Оплати @ViewBag.StudentFullName</h1>
+@if (User.IsInRole("admin"))
+{
+    <p>
 
-<p>
-
-    @Html.ActionLink("Додати нову оплату", "Create", new { RoomAssignmentId = ViewBag.RoomAssignmentId })
-</p>
+        @Html.ActionLink("Додати нову оплату", "Create", new { RoomAssignmentId = ViewBag.RoomAssignmentId })
+    </p>            
+}
 <table class="table">
     <thead>
         <tr>
@@ -40,9 +42,15 @@
             </td>
             
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+              <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                    @if (User.IsInRole("admin"))
+                    {
+                        <text> | </text>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <text> | </text>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
             </td>
         </tr>
 }
